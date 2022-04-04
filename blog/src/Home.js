@@ -1,27 +1,17 @@
-import { useState, useEffect } from 'react';
 import BlogList from './BlogList';
+import useFetch from './useFetch';
 
 const Home = () => {
-  const [blogs, setBlogs] = useState([
-    { title: 'title 1', body: 'lorem ipsum...', author: 'mario', id: 1 },
-    { title: 'title 2', body: 'lorem ipsum...', author: 'luigi', id: 2 },
-    { title: 'title 3', body: 'lorem ipsum...', author: 'toad', id: 3 },
-  ]);
 
-  const handleDelete = (id) => {
-    const newBlogs = blogs.filter(blog => blog.id !== id);
-    setBlogs(newBlogs);
-  };
-
-  useEffect(() => {
-    console.log('use effect ran');
-  }, []);
+  const { data: blogs, isPending, error } = useFetch('http://localhost:8000/blogs');
 
   return ( 
     <div className="home">
-      <BlogList blogs={ blogs } title="All Blogs" handleDelete={ handleDelete }/>
+      { error && <div>{ error }</div>}
+      { isPending && <div>Loading...</div> }
+      { blogs && <BlogList blogs={ blogs } title="All Blogs"/> }
     </div>
-   );
+  );
 }
  
 export default Home;
